@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #A8B39A;
+        }
+
+        header {
+            background:#8D7B68;
+            color: #F5F1E3;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .header-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .header-content p {
+            font-size: 1.2rem;
+        }
+
+        nav {
+            background-color: #5C4B3B;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            list-style: none;
+            display: flex;
+        }
+
+        nav ul li {
+            padding: 1rem 1.5rem;
+        }
+
+        nav ul li a {
+            color: #F5F1E3;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #B47B56;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .about {
+            margin-bottom: 3rem;
+        }
+
+        .about h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 3px solid #5C4B3B;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .projects {
+            margin-bottom: 3rem;
+        }
+
+        .projects h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #5C4B3B;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background-color: #E8E3D9;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px #5C4B3B;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 20px #5C4B3B;
+        }
+
+        .project-img {
+            height: 200px;
+            background-color: #ddd;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-content {
+            padding: 1.5rem;
+        }
+
+        .project-content h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .project-content p {
+            margin-bottom: 1rem;
+            color: #666;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .project-links a {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #6A7B52;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .project-links a:hover {
+            background-color: #6A7B52;
+        }
+
+        .contact {
+            margin-bottom: 3rem;
+        }
+
+        .contact h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #5C4B3B;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .contact-form {
+            background-color: #F9F7F1;
+            padding: 2rem;
+            border-radius: 8px #A0A88F;
+            box-shadow: 0 5px 15px #A0A88F;
+            max-width: 600px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #C5C7B6;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: #A89060;
+            color:#5C4B3B;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #6A7B52;
+            color: #F5F1E3;
+        }
+
+        footer {
+            background-color: #5C4B3B;
+            color: #F5F1E3;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .social-links {
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 0.5rem;
+            text-decoration: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            height: 80%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .project-iframe {
+            width: 100%;
+            height: calc(100% - 40px);
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+            }
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+            .header-content h1 {
+                font-size: 2rem;
+            }
+            .modal-content {
+                width: 95%;
+                height: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Rohith Roshan</h1>
+            <p> Portfolio </p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <section id="about" class="about">
+            <h2>About Me</h2>
+            <p>Hello! I'm second year student in VIT chennai pursuing B.tech Cse Specialisation in AIML, this Portfolio is for my Web Programming course Project, Here you  can see my HTML projects as a part of this portfolio.</p>
+            <p>Feel free to explore each project and reach out if you'd like to collaborate!</p>
+        </section>
+
+        <section id="projects" class="projects">
+            <h2>My Projects</h2>
+            <div class="project-grid">
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="D:\wp2\images.jpeg" alt="Snake Game">
+                    </div>
+                    <div class="project-content">
+                        <h3>Snake Game</h3>
+                        <p>A classic snake game built with JavaScript. Maneuver the snake to collect food while avoiding walls and your own tail.</p>
+                        <div class="project-links">
+                            <button onclick="window.location.href='2.html';">View Project</button>
+                            <button onclick="window.open('2.html.txt', '_blank')">View Code</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="D:\wp2\9b44e0122628599.Y3JvcCwzNDgwLDI3MjIsMTc5MSwyNDk.png" alt="Brick Breaker">
+                    </div>
+                    <div class="project-content">
+                        <h3>Brick Breaker Game</h3>
+                        <p>A classic brick-breaking game where you control a paddle to bounce a ball and break bricks.</p>
+                        <div class="project-links">
+                            <button onclick="window.location.href='3.html';">View Project</button>
+                            <button onclick="window.open('3.html.txt', '_blank')">View Code</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="D:\wp2\to-do-list-flat-icon-free-vector.jpg" alt="To-Do List App">
+                    </div>
+                    <div class="project-content">
+                        <h3>To-Do List App</h3>
+                        <p>A task management application built with JavaScript. Add, delete, and mark tasks as complete with data saved to local storage.</p>
+                        <div class="project-links">
+                            <button onclick="window.location.href='4.html';">View Project</button>
+                            <button onclick="window.open('4.html.txt', '_blank')">View Code</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="D:\wp2\Calculator-icon.png" alt="Calculator">
+                    </div>
+                    <div class="project-content">
+                        <h3>Calculator</h3>
+                        <p>A fully functional calculator application with standard and scientific operations, built using HTML, CSS, and JavaScript.</p>
+                        <div class="project-links">
+                            <button onclick="window.location.href='5.html';">View Project</button>
+                            <button onclick="window.open('5.html.txt', '_blank')">View Code</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="D:\wp2\logoActivity.png"alt="Memory Card Game">
+                    </div>
+                    <div class="project-content">
+                        <h3>Memory Card Game</h3>
+                        <p>A memory matching game where players need to match pairs of cards. Built with HTML, CSS, and JavaScript.</p>
+                        <div class="project-links">
+                            <button onclick="window.location.href='6.html';">View Project</button>
+                            <button onclick="window.open('6.html.txt', '_blank')">View Code</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="D:\wp2\musical-drums-set-playing-silhouette-600nw-2475490693.webp"alt="Drum Kit">
+                    </div>
+                    <div class="project-content">
+                        <h3>Drum Kit</h3>
+                        <p>An interactive drum kit application that plays different drum sounds when keys are pressed or buttons are clicked.</p>
+                        <div class="project-links">
+                            <button onclick="window.location.href='7.html';">View Project</button>
+                            <button onclick="window.open('7.html.txt', '_blank')">View Code</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <h2>Contact Me</h2>
+            <div class="contact-form">
+                <form id="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 Your Name. All Rights Reserved.</p>
+            
+        </div>
+    </footer>
+
+    <div id="project-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <iframe id="project-iframe" class="project-iframe" src=""></iframe>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! In a real website, this would be sent to a server.');
+            this.reset();
+        });
+
+        const modal = document.getElementById('project-modal');
+        const iframe = document.getElementById('project-iframe');
+        const closeModal = document.querySelector('.close-modal');
+        
+        document.querySelectorAll('.view-project').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const project = this.getAttribute('data-project');
+                iframe.src = `projects/${project}/index.html`;
+                modal.style.display = 'block';
+            });
+        });
+        closeModal.addEventListener('click', function() {
+            modal.style.display = 'none';
+            iframe.src = '';
+        });
+
+        window.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                iframe.src = '';
+            }
+        });
+
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                window.scrollTo({
+                    top: targetElement.offsetTop - 60,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

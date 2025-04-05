@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List with Deadlines</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"], input[type="date"] {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f9f9f9;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        li.completed {
+            text-decoration: line-through;
+            background: #d3ffd3;
+        }
+        li.past-deadline {
+            background: #ffcccc;
+        }
+        .delete-btn, .edit-btn {
+            background: #ff4d4d;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            color: white;
+            border-radius: 5px;
+        }
+        .edit-btn {
+            background: #ffa500;
+        }
+        .delete-btn:hover, .edit-btn:hover {
+            background: #f1f1f1;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<h1>To-Do List with Deadlines</h1>
+<div class="container">
+    <input type="text" id="taskInput" placeholder="Enter your task...">
+    <input type="date" id="taskDeadline" placeholder="Pick a deadline">
+    <button onclick="addTask()">Add Task</button>
+    <ul id="taskList"></ul>
+</div>
+
+<script>
+    const taskList = document.getElementById('taskList');
+    const taskInput = document.getElementById('taskInput');
+    const taskDeadline = document.getElementById('taskDeadline');
+
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+    function saveTasks() {
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+    function displayTasks() {
+        taskList.innerHTML = '';
+        tasks.forEach((task, index) => {
+            const li = document.createElement('li');
+            const currentDate = new Date().toISOString().split('T')[0];
+
+            li.classList.toggle('completed', task.completed);
+            if (task.deadline < currentDate && !task.completed) {
+                li.classList.add('past-deadline');
+            }
+
+            li.innerHTML = `
+                <span onclick="toggleTask(${index})">${task.text}</span>
+                <span>Deadline: ${task.deadline}</span>
+                <button class="edit-btn" onclick="editTask(${index})">Edit</button>
+                <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
+            `;
+            taskList.appendChild(li);
+        });
+    }
+
+    function addTask() {
+        const taskText = taskInput.value.trim();
+        const taskDeadlineDate = taskDeadline.value;
+        
+        if (taskText !== '' && taskDeadlineDate !== '') {
+            tasks.push({ text: taskText, completed: false, deadline: taskDeadlineDate });
+            taskInput.value = '';
+            taskDeadline.value = '';
+            saveTasks();
+            displayTasks();
+        } else {
+            alert('Please enter both task description and deadline.');
+        }
+    }
+
+    function toggleTask(index) {
+        tasks[index].completed = !tasks[index].completed;
+        saveTasks();
+        displayTasks();
+    }
+
+    function deleteTask(index) {
+        tasks.splice(index, 1);
+        saveTasks();
+        displayTasks();
+    }
+
+    function editTask(index) {
+        const newTaskText = prompt("Edit your task:", tasks[index].text);
+        const newTaskDeadline = prompt("Edit your task's deadline:", tasks[index].deadline);
+
+        if (newTaskText !== null && newTaskText.trim() !== '') {
+            tasks[index].text = newTaskText;
+            if (newTaskDeadline !== null && newTaskDeadline.trim() !== '') {
+                tasks[index].deadline = newTaskDeadline;
+            }
+            saveTasks();
+            displayTasks();
+        }
+    }
+
+    displayTasks();
+</script>
+
+</body>
+</html>

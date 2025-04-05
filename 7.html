@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Drum Kit</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #c2d3e0;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .container {
+            background-color: #eee;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 15px;
+            border: 3px solid #777;
+            border-radius: 10px;
+        }
+        
+        .keys {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .key {
+            width: 80px;
+            height: 80px;
+            background-color: #f7f7f7;
+            border: 3px solid #555;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+        
+        .key.playing {
+            transform: scale(1.1);
+            border-color: #ffd700;
+            background-color: #ffe87c;
+        }
+        
+        .sound {
+            font-size: 12px;
+            color: #777;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+        
+        kbd {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        button {
+            padding: 8px 15px;
+            background-color: #4a4;
+            color: white;
+            border: 2px solid #060;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #3a3;
+        }
+        
+        #instructions {
+            margin-top: 20px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple Drum Kit</h1>
+    
+    <div class="container">
+        <div class="keys">
+            <div data-key="65" class="key">
+                <kbd>A</kbd>
+                <span class="sound">clap</span>
+            </div>
+            <div data-key="83" class="key">
+                <kbd>S</kbd>
+                <span class="sound">hihat</span>
+            </div>
+            <div data-key="68" class="key">
+                <kbd>D</kbd>
+                <span class="sound">kick</span>
+            </div>
+            <div data-key="70" class="key">
+                <kbd>F</kbd>
+                <span class="sound">openhat</span>
+            </div>
+            <div data-key="71" class="key">
+                <kbd>G</kbd>
+                <span class="sound">boom</span>
+            </div>
+            <div data-key="72" class="key">
+                <kbd>H</kbd>
+                <span class="sound">ride</span>
+            </div>
+            <div data-key="74" class="key">
+                <kbd>J</kbd>
+                <span class="sound">snare</span>
+            </div>
+            <div data-key="75" class="key">
+                <kbd>K</kbd>
+                <span class="sound">tom</span>
+            </div>
+            <div data-key="76" class="key">
+                <kbd>L</kbd>
+                <span class="sound">tink</span>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="play-beat">Play Beat</button>
+            <button id="stop-beat">Stop Beat</button>
+        </div>
+        
+        <p id="instructions">Press keys (A-L) or click on buttons to play sounds</p>
+    </div>
+    
+    <script>
+        // Web Audio API setup
+        let audioContext;
+        
+        // Initialize audio context on first user interaction
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                document.removeEventListener('click', initAudio);
+                document.removeEventListener('keydown', initAudio);
+            }
+        }
+        
+        document.addEventListener('click', initAudio);
+        document.addEventListener('keydown', initAudio);
+        
+        // Define sounds - frequency and duration for different drums
+        const sounds = {
+            65: { type: 'noise', duration: 0.1 }, // Clap - white noise
+            83: { type: 'oscillator', frequency: 800, duration: 0.05 }, // Hihat - high frequency
+            68: { type: 'oscillator', frequency: 100, duration: 0.15 }, // Kick - low frequency
+            70: { type: 'oscillator', frequency: 600, duration: 0.1 }, // Openhat
+            71: { type: 'oscillator', frequency: 60, duration: 0.3 }, // Boom - very low
+            72: { type: 'oscillator', frequency: 300, duration: 0.2 }, // Ride
+            74: { type: 'noise', duration: 0.15 }, // Snare - white noise
+            75: { type: 'oscillator', frequency: 200, duration: 0.1 }, // Tom
+            76: { type: 'oscillator', frequency: 1200, duration: 0.05 } // Tink - high pitch
+        };
+        
+        // Function to play a sound
+        function playSound(keyCode) {
+            if (!audioContext) return;
+            
+            const sound = sounds[keyCode];
+            if (!sound) return;
+            
+            // Create appropriate sound source
+            let oscillator;
+            
+            if (sound.type === 'noise') {
+                // Create noise (for clap and snare)
+                const bufferSize = audioContext.sampleRate * sound.duration;
+                const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+                const data = buffer.getChannelData(0);
+                
+                // Fill buffer with noise
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+                
+                oscillator = audioContext.createBufferSource();
+                oscillator.buffer = buffer;
+            } else {
+                // Create oscillator (for tonal sounds)
+                oscillator = audioContext.createOscillator();
+                oscillator.frequency.setValueAtTime(sound.frequency, audioContext.currentTime);
+                oscillator.type = keyCode === 68 ? 'sine' : 'square'; // Kick uses sine, others square
+            }
+            
+            // Create gain node for envelope
+            const gainNode = audioContext.createGain();
+            gainNode.gain.setValueAtTime(0.7, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + sound.duration);
+            
+            // Connect and start
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + sound.duration);
+            
+            // Visual feedback
+            const key = document.querySelector(`.key[data-key="${keyCode}"]`);
+            if (key) {
+                key.classList.add('playing');
+                setTimeout(() => key.classList.remove('playing'), 100);
+            }
+        }
+        
+        // Event listener for keyboard
+        window.addEventListener('keydown', function(e) {
+            playSound(e.keyCode);
+        });
+        
+        // Event listeners for mouse clicks
+        document.querySelectorAll('.key').forEach(key => {
+            key.addEventListener('click', function() {
+                playSound(parseInt(this.getAttribute('data-key')));
+            });
+        });
+        
+        // Beat patterns
+        let beatInterval;
+        const beatPattern = [
+            { key: 68, time: 0 },    // Kick
+            { key: 83, time: 200 },  // Hihat
+            { key: 74, time: 400 },  // Snare
+            { key: 83, time: 600 },  // Hihat
+            { key: 68, time: 800 },  // Kick
+            { key: 83, time: 1000 }, // Hihat
+            { key: 74, time: 1200 }, // Snare
+            { key: 83, time: 1400 }  // Hihat
+        ];
+        
+        // Play beat function
+        function playBeat() {
+            // Clear any existing interval
+            if (beatInterval) {
+                clearInterval(beatInterval);
+            }
+            
+            // Play the pattern once
+            beatPattern.forEach(note => {
+                setTimeout(() => playSound(note.key), note.time);
+            });
+            
+            // Repeat the pattern
+            beatInterval = setInterval(() => {
+                beatPattern.forEach(note => {
+                    setTimeout(() => playSound(note.key), note.time);
+                });
+            }, 1600);
+        }
+        
+        // Stop beat function
+        function stopBeat() {
+            if (beatInterval) {
+                clearInterval(beatInterval);
+                beatInterval = null;
+            }
+        }
+        
+        // Event listeners for beat controls
+        document.getElementById('play-beat').addEventListener('click', playBeat);
+        document.getElementById('stop-beat').addEventListener('click', stopBeat);
+    </script>
+</body>
+</html>
